@@ -1,0 +1,11 @@
+{
+  "name": "curvescg",
+  "version-string": "1",
+  "dependencies": [
+    "opengl",
+    "glew",
+    "glfw3",
+    "glm",
+    "imgui"
+  ]
+}

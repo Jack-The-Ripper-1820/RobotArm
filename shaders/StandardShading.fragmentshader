@@ -1,0 +1,50 @@
+#version 330 core
+
+// Interpolated values from the vertex shaders
+in vec4 vs_vertexColor;
+in vec3 Position_worldspace;
+in vec3 Normal_cameraspace;
+in vec3 EyeDirection_cameraspace;
+in vec3 LightDirection_cameraspace[2];
+
+// Ouput data
+out vec3 color;
+
+// Values that stay constant for the whole mesh.
+uniform mat4 MV;
+uniform vec3 LightPosition_worldspace[2];
+
+// TL
+// ATTN: Refer to https://learnopengl.com/Lighting/Colors and https://learnopengl.com/Lighting/Basic-Lighting
+// to familiarize yourself with implementing basic lighting model in OpenGL shaders
+
+void main() {
+	//color = vs_vertexColor.rgb;
+
+	vec3 LightColor = vec3(1,1,1);
+	float LightPower = 100.f;
+
+
+	vec3 MaterialDiffuseColor = vs_vertexColor.rgb;
+	vec3 MaterialAmbientColor = vec3(0.1,0.1,0.1) * MaterialDiffuseColor;
+	vec3 MaterialSpecularColor = vec3(0.3,0.3,0.3);
+	vec3 res;
+
+	for(int i = 0; i < 2; i++) {
+		float distance = length( LightPosition_worldspace[i] - Position_worldspace );
+
+		vec3 n = normalize( Normal_cameraspace );
+		vec3 l = normalize( LightDirection_cameraspace[i] );
+		float cosTheta = clamp( dot( n,l ), 0,1 );
+	
+		vec3 E = normalize(EyeDirection_cameraspace);
+		vec3 R = reflect(-l,n);
+		float cosAlpha = clamp( dot( E,R ), 0,1 );
+	
+		res += MaterialAmbientColor + 
+			MaterialDiffuseColor * LightColor * LightPower * cosTheta / (distance*distance) +
+			MaterialSpecularColor * LightColor * LightPower * pow(cosAlpha,5) / (distance*distance);
+	}
+
+	color = res;
+}
