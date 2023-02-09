@@ -3,7 +3,7 @@ vcpkg installation - https://github.com/microsoft/vcpkg/blob/master/README.md
 
 cmake installation - https://cmake.org/install/
 
-Demo - Demo.webm file
+Demo - https://youtu.be/LCWSuNPdSog
 
 ## Project Description - Robot Arm Simulation
 
